@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}All News!{% endblock %}
+
+{% block body %}
+
+<div class="container py-5">
+    <h1>Hello {{ controller_name }}! ✅</h1>
+    {% if news %}
+        <table class='table table-striped'>
+            <thead>
+                <tr>
+                    <th> Title </th>
+                    <th> Actions </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for new in news %}
+                    <tr>
+                        <td> {{ new.title }} </td>
+                        <td>
+                            <a href='/news/{{ new.id }}' class='btn btn-dark'> View </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p> No Parsed News </p> 
+    {% endif %}
+</div>
+{% endblock %}
