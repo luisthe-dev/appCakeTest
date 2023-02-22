@@ -9,11 +9,15 @@ use Doctrine\Persistence\ManagerRegistry;
 use DOMDocument;
 use DOMXPath;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MainController extends AbstractController
 {
+
+    private ?string $baseUrl = 'https://books.toscrape.com';
+
     #[Route('/parse', name: 'app_main')]
     public function index(ManagerRegistry $myDoctrine): Response
     {
@@ -21,7 +25,7 @@ class MainController extends AbstractController
         $url = 'https://books.toscrape.com';
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_URL, $this->baseUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 500);
 
@@ -83,7 +87,25 @@ class MainController extends AbstractController
     {
 
         return $this->render('main/single.html.twig', [
-            'news' => $news
+            'news' => $news,
+            'base_url' => $this->baseUrl
         ]);
+    }
+
+    #[Route('news/delete/{id}', name: 'delete_news')]
+    public function deleteNews(ManagerRegistry $myDoctrine, $id): Response
+    {
+
+
+        $entityManager = $myDoctrine->getManager();
+
+        $news = $myDoctrine->getRepository(News::class)->find($id);
+
+        if ($news) {
+            $entityManager->remove($news);
+            $entityManager->flush();
+        }
+
+        return $this->redirect('/');
     }
 }

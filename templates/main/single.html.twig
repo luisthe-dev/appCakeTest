@@ -1,10 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Single News!{% endblock %}
+{% block title %}{{ news.title}}{% endblock %}
 
 {% block body %}
 
 <div class="container py-5">
-    <h1>Hello! ✅</h1>
+    <h1> {{ news.title}} </h1>
+    <img src='{{ base_url }}/{{ news.image }}' />
+    <p>{{ news.description }}</p>
+    <hr />
+    <a href='/'> Go Back </a>
 </div>
 {% endblock %}

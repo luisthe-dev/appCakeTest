@@ -20,6 +20,7 @@
                         <td> {{ new.title }} </td>
                         <td>
                             <a href='/news/{{ new.id }}' class='btn btn-dark'> View </a>
+                            <a href='/news/delete/{{ new.id }}' class='btn btn-danger'> Delete </a>
                         </td>
                     </tr>
                 {% endfor %}
