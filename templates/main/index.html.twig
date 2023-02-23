@@ -6,6 +6,7 @@
 
 <div class="container py-5">
     <h1>Hello {{ controller_name }}! ✅</h1>
+    <a href='/news/parse' class='btn btn-success my-4'> Parse News </a>
     {% if news %}
         <table class='table table-striped'>
             <thead>
@@ -26,6 +27,15 @@
                 {% endfor %}
             </tbody>
         </table>
+        <div class='d-flex flex-row align-center justify-content-end gap-3'>
+            {% if current != 1 %}
+                <a href='/news?page={{previous}}' > &laquo; Previous </a>
+            {% endif %}
+            
+            {% if next != 1 %}
+             <a href='/news?page={{next}}'> Next &raquo; </a>
+            {% endif %}
+        </div>
     {% else %}
         <p> No Parsed News </p> 
     {% endif %}
