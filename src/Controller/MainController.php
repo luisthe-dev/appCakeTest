@@ -84,6 +84,9 @@ class MainController extends AbstractController
     public function main(ManagerRegistry $myDoctrine, Request $request): Response
     {
 
+        $session = $request->getSession();
+
+        $mainRole = $session->get('user_role');
         $pageCount = 10;
         $previous = 1;
         $page = 1;
@@ -111,7 +114,8 @@ class MainController extends AbstractController
             'news' => $NewsData,
             'current' => $page,
             'next' => $next,
-            'previous' => $previous
+            'previous' => $previous,
+            'user_role' => $mainRole
         ]);
     }
 

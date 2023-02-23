@@ -21,7 +21,9 @@
                         <td> {{ new.title }} </td>
                         <td>
                             <a href='/news/{{ new.id }}' class='btn btn-dark'> View </a>
-                            <a href='/news/delete/{{ new.id }}' class='btn btn-danger'> Delete </a>
+                            {% if user_role == 1 %}
+                                <a href='/news/delete/{{ new.id }}' class='btn btn-danger'> Delete </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
