@@ -10,6 +10,7 @@ use DOMDocument;
 use DOMXPath;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -70,15 +71,47 @@ class MainController extends AbstractController
         return $this->json(['message' => 'News Scraped Successfully']);
     }
 
-    #[Route('/', name: 'main_page')]
-    public function main(ManagerRegistry $myDoctrine): Response
+    #[Route('/news/parse', name: 'self_parse')]
+    public function selfParse(ManagerRegistry $myDoctrine): Response
     {
 
+        $this->index($myDoctrine);
+
+        return $this->redirect('/news');
+    }
+
+    #[Route('/news', name: 'main_page')]
+    public function main(ManagerRegistry $myDoctrine, Request $request): Response
+    {
+
+        $pageCount = 10;
+        $previous = 1;
+        $page = 1;
+        $next = 1;
+
+        if (!$request->query->get('page')) {
+            $page = 1;
+        } else {
+            $page = $request->query->get('page');
+        }
+
         $News = $myDoctrine->getRepository(News::class)->findAll();
+        $NewsData = array();
+
+        for ($i = (($page - 1) * $pageCount); $i < ($page * $pageCount) && $i < sizeof($News); $i++) {
+            array_push($NewsData, $News[$i]);
+        }
+
+        if ($i < sizeof($News))  $next = $page + 1;
+
+        if ($page != 1) $previous = $page - 1;
 
         return $this->render('main/index.html.twig', [
             'controller_name' => 'MainController',
-            'news' => $News
+            'news' => $NewsData,
+            'current' => $page,
+            'next' => $next,
+            'previous' => $previous
         ]);
     }
 
@@ -106,6 +139,6 @@ class MainController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirect('/');
+        return $this->redirect('/news');
     }
 }
